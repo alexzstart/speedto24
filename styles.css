@@ -35,7 +35,7 @@ body {
     
     .initial-page {
         padding: 10px;
-        padding-top: 40px;
+        padding-top: 10px;
     }
     
     .initial-container {
@@ -52,6 +52,10 @@ body {
     
     .initial-container header .subtitle {
         font-size: 0.8rem;
+    }
+    
+    .mode-selection {
+        margin-top: 20px;
     }
     
     .game-page {
@@ -381,6 +385,14 @@ body {
     /* Header padding for very small screens */
     header {
         padding: 18px 15px !important;
+    }
+    
+    .initial-page {
+        padding-top: 5px;
+    }
+    
+    .mode-selection {
+        margin-top: 15px;
     }
     
     /* Additional mobile header optimizations for very small screens */
