@@ -30,12 +30,13 @@ body {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     body {
-        padding: 2px;
+        padding: 0 !important;
+        margin: 0 !important;
     }
     
     .initial-page {
-        padding: 10px;
-        padding-top: 10px;
+        padding: 0 !important;
+        margin: 0 !important;
     }
     
     .initial-container {
@@ -43,19 +44,51 @@ body {
     }
     
     .initial-container header {
-        padding: 10px 15px;
+        padding: 2px 10px !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        border-bottom: none !important;
     }
     
     .initial-container header h1 {
-        font-size: 1.5rem;
+        font-size: 1.2rem !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.1 !important;
     }
     
     .initial-container header .subtitle {
-        font-size: 0.8rem;
+        font-size: 0.7rem !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.1 !important;
     }
     
     .mode-selection {
-        margin-top: 20px;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .mode-selection h2 {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 1.1rem !important;
+        line-height: 1.1 !important;
+    }
+    
+    .mode-btn {
+        padding: 15px 15px !important;
+        margin: 5px 0 !important;
+    }
+    
+    .mode-btn h3 {
+        font-size: 1.1rem !important;
+        margin-bottom: 3px !important;
+    }
+    
+    .mode-btn p {
+        font-size: 0.75rem !important;
+        margin: 0 !important;
     }
     
     .game-page {
@@ -163,21 +196,21 @@ body {
     }
     
     .numbers-container {
-        gap: 4px;
-        margin-bottom: 8px;
+        gap: 3px;
+        margin-bottom: 6px;
         flex-wrap: wrap !important;
         justify-content: center;
-        max-width: 260px;
+        max-width: 200px;
         margin-left: auto;
         margin-right: auto;
     }
     
     .number-tile {
-        width: 126px !important;
-        height: 63px !important;
-        font-size: 1.8rem !important;
-        border-radius: 11px !important;
-        border-width: 3px !important;
+        width: 95px !important;
+        height: 48px !important;
+        font-size: 1.4rem !important;
+        border-radius: 8px !important;
+        border-width: 2px !important;
         flex-shrink: 1 !important;
         flex-grow: 0 !important;
     }
@@ -388,11 +421,18 @@ body {
     }
     
     .initial-page {
-        padding-top: 5px;
+        padding: 0 !important;
+        margin: 0 !important;
     }
     
     .mode-selection {
-        margin-top: 15px;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .mode-selection h2 {
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     /* Additional mobile header optimizations for very small screens */
@@ -449,9 +489,9 @@ body {
     }
     
     .number-tile {
-        width: 126px !important;
-        height: 63px !important;
-        font-size: 1.8rem !important;
+        width: 85px !important;
+        height: 42px !important;
+        font-size: 1.3rem !important;
         flex-shrink: 1 !important;
         flex-grow: 0 !important;
     }
@@ -468,11 +508,11 @@ body {
     
     /* Additional mobile optimizations */
     .numbers-container {
-        gap: 3px;
-        margin-bottom: 6px;
+        gap: 2px;
+        margin-bottom: 4px;
         flex-wrap: wrap !important;
         justify-content: center;
-        max-width: 255px;
+        max-width: 180px;
         margin-left: auto;
         margin-right: auto;
     }
