@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Play the classic 24 Game! Use four numbers and operations to reach exactly 24. Daily challenges and practice mode available.">
+    <meta name="keywords" content="24 game, math game, puzzle, numbers, operations, daily challenge">
+    <meta name="author" content="Speed to 24">
+    <meta name="theme-color" content="#2563eb">
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    
+    <!-- Critical CSS inline for above-the-fold content -->
+    <style>
+        /* Critical CSS for initial page load */
+        body { margin: 0; font-family: 'Open Sans', sans-serif; background: white; }
+        .initial-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .initial-container { text-align: center; max-width: 600px; padding: 20px; }
+        header h1 { font-size: 3rem; margin: 0 0 10px 0; color: #1f2937; }
+        .subtitle { font-size: 1.2rem; color: #6b7280; margin-bottom: 40px; }
+        .mode-selection h2 { font-size: 1.8rem; margin-bottom: 30px; color: #1f2937; }
+        .mode-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .mode-btn { background: #2563eb; color: white; border: none; padding: 20px; border-radius: 12px; cursor: pointer; min-width: 200px; }
+        .mode-btn:hover { background: #1d4ed8; }
+        .mode-btn h3 { margin: 0 0 8px 0; font-size: 1.3rem; }
+        .mode-btn p { margin: 0; opacity: 0.9; font-size: 0.9rem; }
+    </style>
+    
+    <title>24 Game - Get to 24!</title>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="styles.css"></noscript>
+    
+    <!-- Fonts with display=swap for better performance -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMyNTYzZWIiLz4KPHRleHQgeD0iOTYiIHk9IjExMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjcyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjI0PC90ZXh0Pgo8L3N2Zz4K">
+</head>
+<body>
+    <!-- Initial Page -->
+    <div id="initial-page" class="initial-page">
+        <div class="initial-container">
+        <header>
+            <h1>24 Game</h1>
+                <p class="subtitle">Use the four numbers and operations to reach exactly 24</p>
+            </header>
+            
+            <div class="mode-selection">
+                <h2>Choose Your Mode</h2>
+                <div class="mode-buttons">
+                    <button class="mode-btn daily-challenge-btn" id="daily-challenge-btn">
+                        <h3>Daily Challenge</h3>
+                        <p>Complete 5 puzzles as fast as possible</p>
+                    </button>
+                    <button class="mode-btn practice-btn" id="practice-btn">
+                        <h3>Practice Mode</h3>
+                        <p>Play unlimited puzzles at your own pace</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Practice Mode Game -->
+    <div id="practice-game" class="game-page" style="display: none;">
+        <div class="container">
+            <header>
+                <div class="header-content">
+                    <div class="header-text">
+                        <h1>24 Game - Practice Mode</h1>
+                        <p class="subtitle">Use the four numbers and operations to reach exactly 24</p>
+                    </div>
+                    <button class="control-btn home-btn" id="home-btn">Home</button>
+                </div>
+        </header>
+
+        <div class="game-info">
+            <div class="timer">
+                <span class="timer-label">Time:</span>
+                <span id="timer">00:00</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+                <div class="instructions-header">
+            <h3>How to Play:</h3>
+                    <button class="info-btn" id="info-btn" title="Keyboard Controls">ℹ️</button>
+                </div>
+            <ul>
+                <li>Click two numbers and an operation to combine them</li>
+                <li>Use +, -, ×, ÷ to reach exactly 24</li>
+                <li>Only whole numbers allowed (no fractions)</li>
+                    <li>Click "No Solution" if you think it's impossible. Wrong "No Solution" adds 30 seconds to your time.</li>
+            </ul>
+        </div>
+
+        <div class="game-board">
+            <div class="numbers-container" id="numbers-container">
+                <!-- Numbers will be generated here -->
+            </div>
+
+            <div class="operations">
+                <button class="operation-btn" data-operation="add">+</button>
+                <button class="operation-btn" data-operation="subtract">−</button>
+                <button class="operation-btn" data-operation="multiply">×</button>
+                <button class="operation-btn" data-operation="divide">÷</button>
+            </div>
+
+            <div class="game-controls">
+                <button class="control-btn undo-btn" id="undo-btn">Undo</button>
+                <button class="control-btn shuffle-btn" id="shuffle-btn">Shuffle</button>
+                <button class="control-btn reset-btn" id="reset-btn">Reset</button>
+            </div>
+            <div class="game-controls">
+                <button class="control-btn no-solution-btn" id="no-solution-btn">No Solution</button>
+            </div>
+            <div class="game-controls">
+                <button class="control-btn new-game-btn" id="new-game-btn">New Game</button>
+            </div>
+        </div>
+
+        <div class="history">
+            <h3>History:</h3>
+            <div id="history-container">
+                <!-- Operation history will be shown here -->
+            </div>
+        </div>
+
+        <div class="result" id="result">
+            <!-- Success/failure messages will appear here -->
+        </div>
+    </div>
+    </div>
+
+    <!-- Daily Challenge Game -->
+    <div id="daily-game" class="game-page" style="display: none;">
+        <div class="container">
+            <header>
+                <div class="header-content">
+                    <div class="header-text">
+                        <h1>24 Game - Daily Challenge</h1>
+                        <p class="subtitle">Complete 5 puzzles as fast as possible</p>
+                    </div>
+                    <button class="control-btn home-btn" id="daily-home-btn">Home</button>
+                </div>
+            </header>
+
+            <div class="game-info">
+                <div class="timer">
+                    <span class="timer-label">Time:</span>
+                    <span id="daily-timer">00:00</span>
+                </div>
+                <div class="puzzle-counter">
+                    <span class="counter-label">Puzzle:</span>
+                    <span id="puzzle-counter">1/5</span>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <div class="instructions-header">
+                    <h3>How to Play:</h3>
+                    <button class="info-btn" id="daily-info-btn" title="Keyboard Controls">ℹ️</button>
+                </div>
+                <ul>
+                    <li>Click two numbers and an operation to combine them</li>
+                    <li>Use +, -, ×, ÷ to reach exactly 24</li>
+                    <li>Only whole numbers allowed (no fractions)</li>
+                    <li>Click "No Solution" if you think it's impossible. Wrong "No Solution" adds 30 seconds to your time.</li>
+                </ul>
+            </div>
+
+            <div class="game-board">
+                <div class="numbers-container" id="daily-numbers-container">
+                    <!-- Numbers will be generated here -->
+                </div>
+
+                <div class="operations">
+                    <button class="operation-btn" data-operation="add">+</button>
+                    <button class="operation-btn" data-operation="subtract">−</button>
+                    <button class="operation-btn" data-operation="multiply">×</button>
+                    <button class="operation-btn" data-operation="divide">÷</button>
+                </div>
+
+            <div class="game-controls">
+                <button class="control-btn undo-btn" id="daily-undo-btn">Undo</button>
+                <button class="control-btn shuffle-btn" id="daily-shuffle-btn">Shuffle</button>
+                <button class="control-btn reset-btn" id="daily-reset-btn">Reset</button>
+            </div>
+            <div class="game-controls">
+                <button class="control-btn no-solution-btn" id="daily-no-solution-btn">No Solution</button>
+            </div>
+            </div>
+
+            <div class="history">
+                <h3>History:</h3>
+                <div id="daily-history-container">
+                    <!-- Operation history will be shown here -->
+                </div>
+            </div>
+
+            <div class="result" id="daily-result">
+                <!-- Success/failure messages will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Congratulations Popup Modal -->
+    <div id="congrats-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎉 Congratulations! 🎉</h2>
+                <p>You reached 24!</p>
+            </div>
+            <div class="modal-body">
+                <div class="time-display">
+                    <span class="time-label">Your Time:</span>
+                    <span id="final-time" class="final-time">00:00</span>
+                </div>
+                <button id="copy-time-btn" class="copy-btn">Copy Time</button>
+            </div>
+            <div class="modal-footer">
+                <button id="play-again-btn" class="play-again-btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Challenge Complete Modal -->
+    <div id="daily-complete-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="close-daily-modal-btn" class="modal-close-btn">×</button>
+                <h2>🎉 Challenge Complete! 🎉</h2>
+                <p>You completed all 5 puzzles!</p>
+            </div>
+            <div class="modal-body">
+                <div class="time-display">
+                    <span class="time-label">Total Time:</span>
+                    <span id="daily-final-time" class="final-time">00:00</span>
+                </div>
+                <div id="daily-breakdown"></div>
+                <button id="copy-daily-time-btn" class="copy-btn share-btn">Share Results</button>
+            </div>
+            <div class="modal-footer">
+                <button id="back-to-menu-btn" class="play-again-btn">
+                    <span>Back to Menu</span>
+                    <div class="countdown-timer">
+                        <span class="countdown-label">Next challenge in:</span>
+                        <span id="daily-countdown" class="countdown-time">--:--:--</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Instructions Modal -->
+    <div id="keyboard-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Keyboard Controls</h2>
+            </div>
+            <div class="modal-body">
+                <div class="keyboard-instructions">
+                    <h4>Numbers & Operations:</h4>
+                    <ul>
+                        <li><strong>Numbers:</strong> Type any number to select it</li>
+                        <li><strong>Operations:</strong> Type +, -, *, x, / for operations</li>
+                        <li><strong>Escape:</strong> Clear selection</li>
+                        <li><strong>Backspace:</strong> Undo last operation</li>
+                    </ul>
+                    <h4>Quick Actions:</h4>
+                    <ul>
+                        <li><strong>Spacebar:</strong> Shuffle current numbers</li>
+                        <li><strong>R:</strong> Reset to initial numbers</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="close-keyboard-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preload critical JavaScript -->
+    <link rel="preload" href="script.js" as="script">
+    
+    <!-- Load JavaScript with defer for better performance -->
+    <script src="script.js" defer></script>
+    
+    <!-- Service Worker for offline functionality -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
+</body>
+</html> 
