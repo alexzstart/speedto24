@@ -44,14 +44,3 @@ A modern web-based implementation of the classic 24 game using a vibrant color s
 - Includes comprehensive solution checking algorithms
 - Features smooth CSS animations and transitions
 
-## Color Scheme
-
-The game uses a vibrant color palette inspired by the provided image:
-- Bright Green (#00ff00)
-- Light Lime (#90ee90) 
-- Cyan Blue (#00ffff)
-- Bright Red (#ff0080)
-- Bright Orange (#ff6600)
-- Black (#000000)
-
-Enjoy playing the 24 Game! 
