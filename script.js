@@ -104,7 +104,7 @@ class Game24 {
     // Daily puzzle generation system
     generateDailyPuzzles() {
         const today = new Date();
-        const dateString = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+        const dateString = this.getPacificDateString(today); // YYYY-MM-DD in America/Los_Angeles
         
         // Check if we already have puzzles for today
         if (this.dailyPuzzles.length > 0 && this.dailyPuzzles[0].date === dateString) {
@@ -124,6 +124,21 @@ class Game24 {
                 hasSolution: puzzle.hasSolution
             });
         }
+    }
+
+    // Return YYYY-MM-DD string in America/Los_Angeles (Pacific Time)
+    getPacificDateString(date) {
+        const parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'America/Los_Angeles',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).formatToParts(date);
+        const get = (t) => parts.find(p => p.type === t)?.value || '';
+        const year = get('year');
+        const month = get('month');
+        const day = get('day');
+        return `${year}-${month}-${day}`;
     }
 
     getDateSeed(dateString) {
@@ -296,7 +311,7 @@ class Game24 {
         this.resetBtn = document.getElementById('reset-btn');
         this.noSolutionBtn = document.getElementById('no-solution-btn');
         this.newGameBtn = document.getElementById('new-game-btn');
-        this.copyTimeBtn = document.getElementById('copy-time-btn');
+        // Removed practice share / copy button
         this.playAgainBtn = document.getElementById('play-again-btn');
         this.infoBtn = document.getElementById('info-btn');
         this.closeKeyboardBtn = document.getElementById('close-keyboard-btn');
@@ -315,7 +330,7 @@ class Game24 {
 
         this.infoBtn.addEventListener('click', () => this.showKeyboardModal());
         this.closeKeyboardBtn.addEventListener('click', () => this.closeKeyboardModal());
-        this.copyTimeBtn.addEventListener('click', () => this.copyTime());
+        // No practice share handler
         this.playAgainBtn.addEventListener('click', () => this.closeModal());
         
         // Add home button
@@ -925,9 +940,31 @@ class Game24 {
                 gameBoard.classList.remove('shake');
             }, 500);
         } else {
-            // Correct guess
+            // Correct guess - no solution to this puzzle
             this.gameActive = false;
             this.showResult('Correct! There is no solution to this puzzle!', 'success');
+
+            // In daily mode, treat this as puzzle completion
+            if (this.currentMode === 'daily') {
+                // Record time for current puzzle including penalty
+                const puzzleTime = Math.floor((Date.now() - this.dailyPuzzleStartTime) / 1000) + this.dailyPuzzlePenalty;
+                this.dailyPuzzleTimes.push(puzzleTime);
+
+                // If we've recorded all 5 puzzles, show completion immediately
+                if (this.dailyPuzzleTimes.length === 5) {
+                    const finalTotalTime = this.dailyPuzzleTimes.reduce((sum, time) => sum + time, 0);
+                    this.finalDailyTime = finalTotalTime;
+                    const modal = document.getElementById('daily-complete-modal');
+                    if (!modal) {
+                        console.error('Daily complete modal not found in DOM');
+                    }
+                    this.showDailyComplete(finalTotalTime);
+                } else if (this.dailyPuzzleCount < 5) {
+                    // Move to next puzzle
+                    this.gameActive = true;
+                    this.nextDailyPuzzle();
+                }
+            }
         }
     }
 
@@ -965,7 +1002,8 @@ class Game24 {
 
     copyTime() {
         const timeText = document.getElementById('final-time').textContent;
-        navigator.clipboard.writeText(`I solved the 24 Game in ${timeText}!`).then(() => {
+        const shareText = `I solved the 24 Game in ${timeText}! Play at https://speedto24.com`;
+        navigator.clipboard.writeText(shareText).then(() => {
             const copyBtn = document.getElementById('copy-time-btn');
             const originalText = copyBtn.textContent;
             copyBtn.textContent = '✅ Copied!';
@@ -1020,6 +1058,13 @@ class Game24 {
         const timerElement = document.getElementById('daily-timer');
         this.timerInterval = setInterval(() => {
             if (this.gameActive) {
+                // Failsafe: if all 5 puzzles are recorded and completion not shown, show it
+                if (this.dailyPuzzleCount === 5 && !this.dailyChallengeCompleted && this.dailyPuzzleTimes.length === 5) {
+                    const finalTotalTime = this.dailyPuzzleTimes.reduce((sum, time) => sum + time, 0);
+                    this.finalDailyTime = finalTotalTime;
+                    this.showDailyComplete(finalTotalTime);
+                    return;
+                }
                 // Calculate current puzzle time
                 const currentPuzzleTime = Math.floor((Date.now() - this.dailyPuzzleStartTime) / 1000) + this.dailyPuzzlePenalty;
                 
@@ -1140,7 +1185,7 @@ class Game24 {
         // Remove the last comma and space
         breakdownText = breakdownText.slice(0, -2);
         
-        const fullText = `I completed the 24 Game Daily Challenge in ${timeText}! (${breakdownText})`;
+        const fullText = `I completed the 24 Game Daily Challenge in ${timeText}! (${breakdownText}) Play at https://speedto24.com`;
         
         navigator.clipboard.writeText(fullText).then(() => {
             const copyBtn = document.getElementById('copy-daily-time-btn');
