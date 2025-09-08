@@ -14,6 +14,7 @@ class Game24 {
         this.keyBuffer = ''; // Buffer for multi-digit number input
         this.keyBufferTimeout = null; // Timeout for key buffer
         this.noSolutionPenaltyApplied = false; // Track if penalty has been applied for current puzzle
+        this.currentPuzzleHasSolution = true; // Track if current puzzle has a solution
         
         // Performance optimizations
         this.domCache = {}; // Cache frequently used DOM elements
@@ -147,11 +148,8 @@ class Game24 {
         
         const hasSolution = this.hasSolution(numbers);
         
-        // If no solution, try to generate a new puzzle with a slightly different seed
-        if (!hasSolution) {
-            return this.generateSeededPuzzle(seed + 1000);
-        }
-        
+        // Allow puzzles with no solution for more realistic gameplay
+        // About 25% of puzzles will have no solution
         return { numbers, hasSolution };
     }
 
@@ -343,10 +341,10 @@ class Game24 {
         this.initialNumbers = [...this.numbers];
         this.combinationCount = {};
         
-        // Ensure the puzzle has a solution (for better user experience)
-        if (!this.hasSolution(this.numbers)) {
-            this.generateNumbers(); // Recursively generate until we have a solvable puzzle
-        }
+        // Allow some puzzles to have no solution (about 25% chance)
+        // This makes the game more challenging and realistic
+        const hasSolution = this.hasSolution(this.numbers);
+        this.currentPuzzleHasSolution = hasSolution;
     }
 
     hasSolution(numbers) {
@@ -907,8 +905,8 @@ class Game24 {
             const puzzle = this.dailyPuzzles[this.currentPuzzleIndex];
             hasSolution = puzzle ? puzzle.hasSolution : this.hasSolution(this.initialNumbers);
         } else {
-            // For practice mode, check dynamically
-            hasSolution = this.hasSolution(this.initialNumbers);
+            // For practice mode, use the stored solution status
+            hasSolution = this.currentPuzzleHasSolution;
         }
         
         if (hasSolution) {
@@ -1239,6 +1237,7 @@ class Game24 {
         this.gameActive = true;
         this.penaltyTime = 0;
         this.noSolutionPenaltyApplied = false; // Reset penalty flag
+        this.currentPuzzleHasSolution = true; // Reset solution status
         
         // Reset timers
         this.startTime = Date.now();
@@ -1340,6 +1339,8 @@ class Game24 {
         this.initialNumbers = [];
         this.combinationCount = {};
         this.keyBuffer = '';
+        this.noSolutionPenaltyApplied = false;
+        this.currentPuzzleHasSolution = true;
         if (this.keyBufferTimeout) {
             clearTimeout(this.keyBufferTimeout);
             this.keyBufferTimeout = null;

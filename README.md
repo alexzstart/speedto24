@@ -20,7 +20,7 @@ A modern web-based implementation of the classic 24 game using a vibrant color s
    - Smooth animations when combining numbers
    - Visual indicators for combined numbers (star symbol)
    - Responsive design for mobile and desktop
-   - Automatic puzzle generation with guaranteed solutions
+   - Automatic puzzle generation with realistic mix of solvable and unsolvable puzzles
 
 ## How to Run
 
