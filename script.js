@@ -116,7 +116,9 @@ class Game24 {
         const seed = this.getDateSeed(dateString);
         
         for (let i = 0; i < 5; i++) {
-            const puzzle = this.generateSeededPuzzle(seed + i);
+            // Use a much larger increment to ensure different puzzles
+            const puzzleSeed = seed + (i * 1000);
+            const puzzle = this.generateSeededPuzzle(puzzleSeed);
             this.dailyPuzzles.push({
                 date: dateString,
                 puzzleIndex: i,
@@ -148,8 +150,9 @@ class Game24 {
         const month = date.getMonth() + 1;
         const day = date.getDate();
         
-        // Create a deterministic seed from the date
-        return year * 10000 + month * 100 + day;
+        // Create a more varied deterministic seed from the date
+        // Use a larger multiplier to ensure significant variation between days
+        return year * 1000000 + month * 10000 + day * 100;
     }
 
     generateSeededPuzzle(seed) {
@@ -1174,18 +1177,18 @@ class Game24 {
     copyDailyTime() {
         const timeText = document.getElementById('daily-final-time').textContent;
         
-        // Create breakdown text for individual puzzle times
+        // Create breakdown text for individual puzzle times with proper formatting
         let breakdownText = '';
         this.dailyPuzzleTimes.forEach((time, index) => {
             const puzzleMinutes = Math.floor(time / 60);
             const puzzleSeconds = time % 60;
             const puzzleTimeString = `${puzzleMinutes.toString().padStart(2, '0')}:${puzzleSeconds.toString().padStart(2, '0')}`;
-            breakdownText += `Puzzle ${index + 1}: ${puzzleTimeString}, `;
+            breakdownText += `Puzzle ${index + 1}: ${puzzleTimeString}\n`;
         });
-        // Remove the last comma and space
-        breakdownText = breakdownText.slice(0, -2);
+        // Remove the last newline
+        breakdownText = breakdownText.slice(0, -1);
         
-        const fullText = `I completed the 24 Game Daily Challenge in ${timeText}! (${breakdownText}) Play at https://speedto24.com`;
+        const fullText = `I completed the Speed to 24 Game Daily Challenge in ${timeText}! \n${breakdownText}\nPlay at https://speedto24.com`;
         
         navigator.clipboard.writeText(fullText).then(() => {
             const copyBtn = document.getElementById('copy-daily-time-btn');

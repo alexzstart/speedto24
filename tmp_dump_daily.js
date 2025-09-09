@@ -3,7 +3,7 @@ function getDateSeed(dateString){
   const y=d.getUTCFullYear();
   const m=d.getUTCMonth()+1;
   const day=d.getUTCDate();
-  return y*10000+m*100+day;
+  return y*1000000+m*10000+day*100;
 }
 
 function seededRandom(seed){
@@ -107,7 +107,8 @@ const dateString = new Date().toISOString().split('T')[0];
 const seed = getDateSeed(dateString);
 console.log('UTC Date:', dateString);
 for(let i=0;i<5;i++){
-  const p = generateSeededPuzzle(seed+i);
+  const puzzleSeed = seed + (i * 1000);
+  const p = generateSeededPuzzle(puzzleSeed);
   console.log(`Puzzle ${i+1}:`, JSON.stringify(p.numbers), '-', p.hasSolution ? 'Solvable' : 'No Solution');
 }
 
