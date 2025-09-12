@@ -155,7 +155,7 @@
             <header>
                 <div class="header-content">
                     <div class="header-text">
-                        <h1>24 Game - Daily Challenge</h1>
+                        <h1>24 Game - Daily Challenge <span id="daily-challenge-number">#1</span></h1>
                         <p class="subtitle">Complete 5 puzzles as fast as possible</p>
                     </div>
                     <button class="control-btn home-btn" id="daily-home-btn">Home</button>
@@ -299,6 +299,9 @@
 
     <!-- Preload critical JavaScript -->
     <link rel="preload" href="script.js" as="script">
+    
+    <!-- Daily Puzzles Data -->
+    <script src="daily-puzzles.js"></script>
     
     <!-- Load JavaScript with defer for better performance -->
     <script src="script.js" defer></script>

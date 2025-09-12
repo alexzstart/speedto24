@@ -103,9 +103,24 @@ function generateSeededPuzzle(seed){
   return {numbers:nums, hasSolution:solv};
 }
 
-const dateString = new Date().toISOString().split('T')[0];
+// Use Pacific Time like the actual game
+function getPacificDateString(date) {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/Los_Angeles',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).formatToParts(date);
+    const get = (t) => parts.find(p => p.type === t)?.value || '';
+    const year = get('year');
+    const month = get('month');
+    const day = get('day');
+    return `${year}-${month}-${day}`;
+}
+
+const dateString = getPacificDateString(new Date());
 const seed = getDateSeed(dateString);
-console.log('UTC Date:', dateString);
+console.log('Pacific Date:', dateString);
 for(let i=0;i<5;i++){
   const puzzleSeed = seed + (i * 1000);
   const p = generateSeededPuzzle(puzzleSeed);

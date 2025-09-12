@@ -32,6 +32,7 @@ class Game24 {
         this.currentPuzzleIndex = 0; // Track current puzzle in daily challenge
         this.finalDailyTime = 0; // Store final total time for daily challenge
         this.dailyChallengeCompleted = false; // Track if daily challenge is completed
+        this.dailyChallengeNumber = 1; // Default challenge number
         
         // Setup global keyboard event listener
         this.setupKeyboardListener();
@@ -101,7 +102,7 @@ class Game24 {
         }
     }
 
-    // Daily puzzle generation system
+    // Daily puzzle generation system - now uses static dictionary
     generateDailyPuzzles() {
         const today = new Date();
         const dateString = this.getPacificDateString(today); // YYYY-MM-DD in America/Los_Angeles
@@ -111,8 +112,28 @@ class Game24 {
             return; // Already generated for today
         }
         
-        // Generate 5 puzzles for today using a seed based on the date
+        // Try to get puzzles from static dictionary first
+        let staticData = null;
+        try {
+            staticData = getDailyPuzzles(dateString);
+        } catch (error) {
+            console.warn('getDailyPuzzles function not available, using fallback generation:', error);
+        }
+        if (staticData) {
+            this.dailyChallengeNumber = staticData.challengeNumber;
+            this.dailyPuzzles = staticData.puzzles.map((puzzle, index) => ({
+                date: dateString,
+                puzzleIndex: index,
+                numbers: puzzle.numbers,
+                hasSolution: puzzle.hasSolution
+            }));
+            this.updateDailyChallengeNumber();
+            return;
+        }
+        
+        // Fallback to generated puzzles if not in static dictionary
         this.dailyPuzzles = [];
+        this.dailyChallengeNumber = Math.floor((new Date(dateString) - new Date('2025-09-09')) / (1000 * 60 * 60 * 24)) + 1; // Calculate challenge number from date
         const seed = this.getDateSeed(dateString);
         
         for (let i = 0; i < 5; i++) {
@@ -126,6 +147,7 @@ class Game24 {
                 hasSolution: puzzle.hasSolution
             });
         }
+        this.updateDailyChallengeNumber();
     }
 
     // Return YYYY-MM-DD string in America/Los_Angeles (Pacific Time)
@@ -141,6 +163,18 @@ class Game24 {
         const month = get('month');
         const day = get('day');
         return `${year}-${month}-${day}`;
+    }
+
+    // Update the Daily Challenge Number in the UI
+    updateDailyChallengeNumber() {
+        try {
+            const challengeNumberElement = document.getElementById('daily-challenge-number');
+            if (challengeNumberElement) {
+                challengeNumberElement.textContent = `#${this.dailyChallengeNumber}`;
+            }
+        } catch (error) {
+            console.warn('Could not update daily challenge number:', error);
+        }
     }
 
     getDateSeed(dateString) {
@@ -957,15 +991,13 @@ class Game24 {
                 if (this.dailyPuzzleTimes.length === 5) {
                     const finalTotalTime = this.dailyPuzzleTimes.reduce((sum, time) => sum + time, 0);
                     this.finalDailyTime = finalTotalTime;
-                    const modal = document.getElementById('daily-complete-modal');
-                    if (!modal) {
-                        console.error('Daily complete modal not found in DOM');
-                    }
                     this.showDailyComplete(finalTotalTime);
                 } else if (this.dailyPuzzleCount < 5) {
-                    // Move to next puzzle
-                    this.gameActive = true;
-                    this.nextDailyPuzzle();
+                    // Move to next puzzle after a short delay
+                    setTimeout(() => {
+                        this.gameActive = true;
+                        this.nextDailyPuzzle();
+                    }, 1500); // 1.5 second delay to show the success message
                 }
             }
         }
@@ -1051,6 +1083,9 @@ class Game24 {
         this.history = [];
         this.selectedNumbers = [];
         this.selectedOperation = null;
+        
+        // Clear any result messages
+        this.clearResult();
         
         // Load the pre-generated puzzle for this day
         this.loadDailyPuzzle();
@@ -1188,7 +1223,8 @@ class Game24 {
         // Remove the last newline
         breakdownText = breakdownText.slice(0, -1);
         
-        const fullText = `I completed the Speed to 24 Game Daily Challenge in ${timeText}! \n${breakdownText}\nPlay at https://speedto24.com`;
+        const challengeNum = this.dailyChallengeNumber || 1; // Fallback to 1 if not set
+        const fullText = `I completed the Speed to 24 Game Daily Challenge #${challengeNum} in ${timeText}! \n${breakdownText}\nPlay at https://speedto24.com`;
         
         navigator.clipboard.writeText(fullText).then(() => {
             const copyBtn = document.getElementById('copy-daily-time-btn');
