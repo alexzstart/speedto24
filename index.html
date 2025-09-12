@@ -100,15 +100,18 @@
 
         <div class="instructions">
                 <div class="instructions-header">
-            <h3>How to Play:</h3>
+                    <button class="toggle-btn" id="toggle-instructions-btn" title="Hide/Show Instructions">▼</button>
+                    <h3>How to Play:</h3>
                     <button class="info-btn" id="info-btn" title="Keyboard Controls">ℹ️</button>
                 </div>
-            <ul>
-                <li>Click two numbers and an operation to combine them</li>
-                <li>Use +, -, ×, ÷ to reach exactly 24</li>
-                <li>Only whole numbers allowed (no fractions)</li>
+            <div class="instructions-content" id="instructions-content">
+                <ul>
+                    <li>Click two numbers and an operation to combine them</li>
+                    <li>Use +, -, ×, ÷ to reach exactly 24</li>
+                    <li>Only whole numbers allowed (no fractions)</li>
                     <li>Click "No Solution" if you think it's impossible. Wrong "No Solution" adds 30 seconds to your time.</li>
-            </ul>
+                </ul>
+            </div>
         </div>
 
         <div class="game-board">
@@ -136,15 +139,15 @@
             </div>
         </div>
 
+        <div class="result" id="result">
+            <!-- Success/failure messages will appear here -->
+        </div>
+
         <div class="history">
             <h3>History:</h3>
             <div id="history-container">
                 <!-- Operation history will be shown here -->
             </div>
-        </div>
-
-        <div class="result" id="result">
-            <!-- Success/failure messages will appear here -->
         </div>
     </div>
     </div>
@@ -175,15 +178,18 @@
 
             <div class="instructions">
                 <div class="instructions-header">
+                    <button class="toggle-btn" id="daily-toggle-instructions-btn" title="Hide/Show Instructions">▼</button>
                     <h3>How to Play:</h3>
                     <button class="info-btn" id="daily-info-btn" title="Keyboard Controls">ℹ️</button>
                 </div>
-                <ul>
-                    <li>Click two numbers and an operation to combine them</li>
-                    <li>Use +, -, ×, ÷ to reach exactly 24</li>
-                    <li>Only whole numbers allowed (no fractions)</li>
-                    <li>Click "No Solution" if you think it's impossible. Wrong "No Solution" adds 30 seconds to your time.</li>
-                </ul>
+                <div class="instructions-content" id="daily-instructions-content">
+                    <ul>
+                        <li>Click two numbers and an operation to combine them</li>
+                        <li>Use +, -, ×, ÷ to reach exactly 24</li>
+                        <li>Only whole numbers allowed (no fractions)</li>
+                        <li>Click "No Solution" if you think it's impossible. Wrong "No Solution" adds 30 seconds to your time.</li>
+                    </ul>
+                </div>
             </div>
 
             <div class="game-board">
@@ -208,15 +214,15 @@
             </div>
             </div>
 
+            <div class="result" id="daily-result">
+                <!-- Success/failure messages will appear here -->
+            </div>
+
             <div class="history">
                 <h3>History:</h3>
                 <div id="daily-history-container">
                     <!-- Operation history will be shown here -->
                 </div>
-            </div>
-
-            <div class="result" id="daily-result">
-                <!-- Success/failure messages will appear here -->
             </div>
         </div>
     </div>

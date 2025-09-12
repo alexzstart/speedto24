@@ -39,6 +39,7 @@ class Game24 {
         
         this.setupInitialPage();
         this.cacheDOMElements();
+        this.setupCollapsibleInstructions();
     }
     
     // Performance optimization: Cache frequently used DOM elements
@@ -174,6 +175,43 @@ class Game24 {
             }
         } catch (error) {
             console.warn('Could not update daily challenge number:', error);
+        }
+    }
+
+    // Setup collapsible instructions functionality
+    setupCollapsibleInstructions() {
+        // Practice mode toggle
+        const practiceToggleBtn = document.getElementById('toggle-instructions-btn');
+        const practiceInstructionsContent = document.getElementById('instructions-content');
+        
+        if (practiceToggleBtn && practiceInstructionsContent) {
+            practiceToggleBtn.addEventListener('click', () => {
+                const isCollapsed = practiceInstructionsContent.classList.contains('collapsed');
+                if (isCollapsed) {
+                    practiceInstructionsContent.classList.remove('collapsed');
+                    practiceToggleBtn.textContent = '▼';
+                } else {
+                    practiceInstructionsContent.classList.add('collapsed');
+                    practiceToggleBtn.textContent = '▶';
+                }
+            });
+        }
+
+        // Daily challenge toggle
+        const dailyToggleBtn = document.getElementById('daily-toggle-instructions-btn');
+        const dailyInstructionsContent = document.getElementById('daily-instructions-content');
+        
+        if (dailyToggleBtn && dailyInstructionsContent) {
+            dailyToggleBtn.addEventListener('click', () => {
+                const isCollapsed = dailyInstructionsContent.classList.contains('collapsed');
+                if (isCollapsed) {
+                    dailyInstructionsContent.classList.remove('collapsed');
+                    dailyToggleBtn.textContent = '▼';
+                } else {
+                    dailyInstructionsContent.classList.add('collapsed');
+                    dailyToggleBtn.textContent = '▶';
+                }
+            });
         }
     }
 
